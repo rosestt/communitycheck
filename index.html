@@ -11,7 +11,7 @@
 <meta name="robots" content="index, follow">
 <meta property="og:title" content="The Noisy Room">
 <meta property="og:description" content="Only 3% of social media users post toxic content — but Americans estimate 43%. An interactive essay about what algorithms hide.">
-<meta property="og:image" content="https://thenoisyroom.com/og-image.png?v=2">
+<meta property="og:image" content="https://thenoisyroom.com/og-image.png?v=3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://thenoisyroom.com">
@@ -21,7 +21,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="The Noisy Room">
 <meta name="twitter:description" content="Only 3% of social media users post toxic content — but Americans estimate 43%. An interactive essay.">
-<meta name="twitter:image" content="https://thenoisyroom.com/og-image.png?v=2">
+<meta name="twitter:image" content="https://thenoisyroom.com/og-image.png?v=3">
 <meta name="twitter:creator" content="@TobiasRose">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Article","headline":"The Noisy Room","description":"How a tiny minority distorts what everyone else sees. An interactive essay about social media, misperception, and a proposal to fix it.","author":{"@type":"Person","name":"Tobias Rose-Stockwell","url":"https://tobias.cc"},"url":"https://thenoisyroom.com","image":"https://thenoisyroom.com/og-image.png","datePublished":"2026-02-18","dateModified":"2026-04-15","publisher":{"@type":"Organization","name":"The Noisy Room"}}
@@ -230,6 +230,9 @@ button { font-family: inherit; cursor: pointer; }
 }
 .essay-header h1 { font-family: var(--display); font-size: clamp(42px, 10vw, 72px); font-weight: 400; font-style: italic; line-height: 1.06; color: var(--text); margin-bottom: 20px; letter-spacing: -2px; }
 .essay-header .lead { font-size: clamp(25px, 5vw, 31px); line-height: 1.4; color: var(--text); margin-bottom: 0; max-width: 700px; }
+.essay-header .byline { font-family: var(--mono); font-size: 13px; color: var(--text-tertiary); margin-top: 16px; letter-spacing: 0.3px; }
+.essay-header .byline a { color: var(--text-tertiary); text-decoration: none; border-bottom: 1px solid var(--border-bright); transition: color 0.2s, border-color 0.2s; }
+.essay-header .byline a:hover { color: var(--text-secondary); border-color: var(--text-tertiary); }
 .essay-header-rule { width: 100%; height: 1px; background: linear-gradient(90deg, var(--border-bright), transparent 80%); margin-top: 40px; }
 
 .essay { max-width: 700px; margin: 0 auto; padding: 0 24px 120px; position: relative; z-index: 1; }
@@ -660,6 +663,42 @@ p strong { color: var(--text); font-weight: 600; }
 .sfv-step-label { font-weight: 500; }
 .sfv-step-desc { text-align: center; font-size: 13px; color: var(--text-secondary); line-height: 1.5; max-width: 400px; min-height: 40px; }
 
+/* Larger phone + readable type on wider screens — the 220px mockup is unreadable on desktop */
+@media (min-width: 700px) {
+  .sfv-phone { width: 310px; padding: 10px; border-radius: 36px; }
+  .sfv-screen { border-radius: 26px; }
+  .sfv-notch { width: 58px; height: 5px; margin: 5px auto 8px; }
+  .sfv-video-bg { padding: 16px; }
+  .sfv-text-line-1, .sfv-text-line-2 { font-size: 18px; }
+  .sfv-text-line-3 { font-size: 12px; margin-top: 8px; }
+  .sfv-creator-row { gap: 8px; margin-bottom: 10px; }
+  .sfv-creator-avatar { width: 32px; height: 32px; border-width: 2px; }
+  .sfv-creator-name { font-size: 12px; }
+  .sfv-creator-follow { font-size: 11px; padding: 3px 9px; border-radius: 4px; }
+  .sfv-caption { font-size: 12px; margin-bottom: 14px; }
+  .sfv-engagement { right: 14px; bottom: 84px; gap: 16px; }
+  .sfv-eng-item { font-size: 11px; gap: 3px; }
+  .sfv-eng-icon { font-size: 22px; }
+  .sfv-cc-indicator { padding: 12px 16px; gap: 10px; }
+  .sfv-cc-dot { width: 10px; height: 10px; }
+  .sfv-cc-hint { font-size: 12px; }
+  .sfv-cc-expanded { padding: 18px 16px 16px; border-radius: 16px 16px 0 0; }
+  .sfv-cc-header { font-size: 12px; gap: 8px; margin-bottom: 12px; }
+  .sfv-cc-dot-sm { width: 8px; height: 8px; }
+  .sfv-cc-close { font-size: 16px; }
+  .sfv-cc-question { font-size: 15px; margin-bottom: 12px; }
+  .sfv-cc-bars { gap: 10px; }
+  .sfv-cc-bar-row { gap: 3px; }
+  .sfv-cc-bar { height: 20px; border-radius: 4px; font-size: 11px; padding-left: 8px; }
+  .sfv-cc-bar-label { font-size: 11px; }
+  .sfv-cc-source { font-size: 9px; margin-top: 10px; padding-top: 8px; }
+  .sfv-pinned { padding: 14px 16px; }
+  .sfv-pinned-header { gap: 8px; margin-bottom: 8px; }
+  .sfv-pinned-badge { font-size: 9px; padding: 2px 7px; }
+  .sfv-pinned-by { font-size: 11px; }
+  .sfv-pinned-text { font-size: 12px; }
+}
+
 /* FAQ */
 .faq { margin-top: 72px; margin-bottom: 0; }
 .faq-title { font-family: var(--display); font-size: 26px; font-weight: 400; color: var(--text); margin-bottom: 8px; letter-spacing: -0.3px; }
@@ -800,6 +839,14 @@ p strong { color: var(--text); font-weight: 600; }
 .share-btn:hover { border-color: var(--accent-green); color: var(--accent-green); background: var(--accent-green-dim); }
 .share-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
 .share-btn.copied { background: var(--accent-green-dim); border-color: var(--accent-green); color: var(--accent-green); }
+/* Perception score card (shareable ending) */
+.score-card-wrap { margin: 0 auto 36px; max-width: 460px; }
+.score-card-nudge { font-family: var(--mono); font-size: 12px; line-height: 1.7; color: var(--text-tertiary); background: var(--muted); border: 1px dashed var(--border-bright); border-radius: 10px; padding: 14px 18px; }
+.score-card-nudge a { color: var(--accent-green); text-decoration: underline; }
+.score-card canvas { width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--border-bright); box-shadow: 0 12px 40px rgba(0,0,0,0.10); display: block; }
+.score-card-actions { display: flex; justify-content: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+.score-card-kicker { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 12px; }
+
 .share-divider { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
 .share-divider::before, .share-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 .share-divider span { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-tertiary); }
@@ -1261,6 +1308,7 @@ function feedDotBg() { return isDarkTheme() ? 'rgba(255,255,255,0.1)' : 'rgba(0,
     <div id="hero-people" style="position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0"></div>
     <h1 style="position:relative; z-index:1">The Noisy Room</h1>
     <p class="lead" style="position:relative; z-index:1">A Story About Common Confusion</p>
+    <p class="byline" style="position:relative; z-index:1">by <a href="https://tobias.substack.com" target="_blank" rel="noopener">Tobias Rose-Stockwell</a></p>
     <div style="margin-top:40px"></div>
   </header>
 
@@ -1860,6 +1908,26 @@ function feedDotBg() { return isDarkTheme() ? 'rgba(255,255,255,0.1)' : 'rgba(0,
     <div class="share-section">
       <h3>Help Surface the Quiet Majority</h3>
       <p>If this changed how you see the feed, share it with someone who might need to see it too.</p>
+
+      <div class="score-card-wrap" id="score-card-wrap">
+        <div class="score-card-kicker">Your result</div>
+        <div class="score-card-nudge" id="score-card-nudge">
+          Want a shareable score? <a href="#misperception-quiz">Take the two-question perception check above</a> and your card appears here.
+        </div>
+        <div class="score-card hidden" id="score-card">
+          <canvas id="score-canvas" width="1080" height="1080" aria-label="Your perception score card"></canvas>
+          <div class="score-card-actions">
+            <button class="share-btn" id="score-share-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              Share my result
+            </button>
+            <button class="share-btn" id="score-download-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download card
+            </button>
+          </div>
+        </div>
+      </div>
 
       <div class="share-buttons">
         <a class="share-btn" id="share-x" href="#" target="_blank" rel="noopener">
@@ -3116,6 +3184,7 @@ const MQ_DATA = {
   2: { actual: 2, label: 'Republicans earning $250K+', shortLabel: '2%' },
 };
 let mqLocked = 0;
+const mqGuesses = {};
 
 function lockMQ(n) {
   const sl = document.getElementById('mq-slider-' + n);
@@ -3142,15 +3211,185 @@ function lockMQ(n) {
     reveal.innerHTML = `<div class="reveal-box" style="margin-top:12px"><div class="reveal-comparison" style="margin:0;border:none;padding:0">${msg}</div></div>`;
   }, 600);
 
+  mqGuesses[n] = guess;
   mqLocked++;
   if (mqLocked === 2) {
     setTimeout(() => {
       document.getElementById('mq-reveal').innerHTML = `
         <p style="font-family:var(--serif);font-size:17px;line-height:2.6;color:var(--text-secondary);margin-top:16px">The average American overestimates these kinds of figures by <strong style="font-family:var(--mono);font-size:24px;color:var(--text);line-height:1">342%</strong>. Social media turns the visible few into your mental model of the whole group.</p>
+        <p style="font-family:var(--mono);font-size:13px;margin-top:12px"><a href="#share" style="color:var(--accent-green);text-decoration:underline">Your shareable perception score is waiting at the end &#8595;</a></p>
       `;
     }, 1200);
+    updateScoreCard();
   }
 }
+
+// ═══════════════════════════════
+// PERCEPTION SCORE CARD (shareable ending)
+// ═══════════════════════════════
+function computeDistortion() {
+  if (mqGuesses[1] === undefined || mqGuesses[2] === undefined) return null;
+  const rows = [1, 2].map(n => ({
+    label: n === 1 ? 'Democrats who are LGBTQ' : 'Republicans earning $250K+',
+    guess: mqGuesses[n],
+    actual: MQ_DATA[n].actual,
+    ratio: Math.max(1, mqGuesses[n] / MQ_DATA[n].actual),
+  }));
+  const avg = (rows[0].ratio + rows[1].ratio) / 2;
+  const mult = avg >= 10 ? Math.round(avg) : Math.round(avg * 10) / 10;
+  let verdict, tone;
+  if (avg < 1.5)      { verdict = 'Clear-eyed. I see the actual room.'; tone = 'green'; }
+  else if (avg < 3)   { verdict = 'Mild static. Close to the real room.'; tone = 'green'; }
+  else if (avg < 8)   { verdict = 'My feed inflated the loud few.'; tone = 'red'; }
+  else                { verdict = 'The noisy 3% owned my priors.'; tone = 'red'; }
+  return { rows, mult, verdict, tone };
+}
+
+function currentShareText() {
+  const d = computeDistortion();
+  if (d) return 'My perception score: I overestimated the “other side” by ' + d.mult + '×. Only ~3% of users post the toxic stuff — the algorithm makes it look like everyone. Check your own distortion:';
+  return "Only 3% of social media users post toxic content. But the algorithm makes it look like everyone.\n\nThis interactive explainer shows how it works — and what a fix looks like.";
+}
+
+function drawPerson(ctx, x, y, s, color) {
+  // s = cell size; head + shoulders glyph, matches the site's crowd figures
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(x + s * 0.5, y + s * 0.30, s * 0.17, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(x + s * 0.20, y + s * 0.92);
+  ctx.arc(x + s * 0.5, y + s * 0.92, s * 0.30, Math.PI, 0);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawScoreCard(d) {
+  const canvas = document.getElementById('score-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = 1080, H = 1080;
+  const INK = '#1c1a17', TERT = '#736d65', GREEN = '#16a34a', RED = '#dc2626',
+        BG = '#faf8f4', MUTED = '#eceae4', BORDER = '#e8e4de';
+  const toneColor = d.tone === 'green' ? GREEN : RED;
+  const M = 88; // side margin
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = BG;
+  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = toneColor;
+  ctx.fillRect(0, 0, W, 10);
+
+  // Kicker
+  try { ctx.letterSpacing = '4px'; } catch (e) {}
+  ctx.fillStyle = GREEN;
+  ctx.beginPath(); ctx.arc(M + 10, 108, 10, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = TERT;
+  ctx.font = '600 26px "IBM Plex Mono", monospace';
+  ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('COMMUNITY CHECK · PERCEPTION SCORE', M + 38, 110);
+  try { ctx.letterSpacing = '0px'; } catch (e) {}
+
+  // Giant multiple
+  ctx.textAlign = 'center';
+  ctx.fillStyle = toneColor;
+  ctx.font = '700 250px "IBM Plex Mono", monospace';
+  ctx.fillText(d.mult + '×', W / 2, 320);
+  ctx.fillStyle = TERT;
+  ctx.font = '400 30px "IBM Plex Mono", monospace';
+  ctx.fillText('how much my feed inflated the “other side”', W / 2, 452);
+
+  // Verdict
+  ctx.fillStyle = INK;
+  ctx.font = 'italic 54px Georgia, serif';
+  ctx.fillText(d.verdict, W / 2, 540);
+
+  // Stat rows
+  let y = 634;
+  const trackW = W - M * 2;
+  d.rows.forEach(row => {
+    ctx.textAlign = 'left';
+    ctx.fillStyle = INK;
+    ctx.font = '600 25px "IBM Plex Mono", monospace';
+    ctx.fillText(row.label, M, y);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = TERT;
+    ctx.font = '400 23px "IBM Plex Mono", monospace';
+    ctx.fillText('my guess ' + row.guess + '%  ·  reality ' + row.actual + '%', W - M, y);
+
+    const barY = y + 22;
+    ctx.fillStyle = MUTED;
+    ctx.beginPath(); ctx.roundRect(M, barY, trackW, 20, 10); ctx.fill();
+    ctx.fillStyle = RED;
+    ctx.beginPath(); ctx.roundRect(M, barY, Math.max(20, trackW * row.guess / 100), 20, 10); ctx.fill();
+    ctx.fillStyle = GREEN;
+    ctx.beginPath(); ctx.roundRect(M, barY + 26, Math.max(14, trackW * row.actual / 100), 8, 4); ctx.fill();
+    y += 110;
+  });
+
+  // Room strip: 100 figures, 3 red
+  const cols = 25, gRows = 4, cell = 30, gridW = cols * cell, gx = (W - gridW) / 2, gridY = 828;
+  const redIdx = new Set([7, 41, 88]);
+  for (let i = 0; i < 100; i++) {
+    const cx = gx + (i % cols) * cell;
+    const cy = gridY + Math.floor(i / cols) * cell;
+    drawPerson(ctx, cx, cy, cell, redIdx.has(i) ? RED : '#d0ccc4');
+  }
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = TERT;
+  ctx.font = '400 23px "IBM Plex Mono", monospace';
+  ctx.fillText('3 in 100 users post the toxic stuff. The feed hides the other 97.', W / 2, 990);
+
+  ctx.fillStyle = GREEN;
+  ctx.font = '700 28px "IBM Plex Mono", monospace';
+  ctx.fillText('thenoisyroom.com', W / 2, 1038);
+
+  // hairline frame
+  ctx.strokeStyle = BORDER;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(1, 1, W - 2, H - 2);
+}
+
+function updateScoreCard() {
+  const d = computeDistortion();
+  if (!d) return;
+  document.getElementById('score-card-nudge').classList.add('hidden');
+  document.getElementById('score-card').classList.remove('hidden');
+  const fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+  fontsReady.then(() => drawScoreCard(d));
+  if (typeof refreshShareLinks === 'function') refreshShareLinks();
+}
+
+async function shareScoreCard() {
+  const canvas = document.getElementById('score-canvas');
+  const btn = document.getElementById('score-share-btn');
+  const text = currentShareText() + '\nhttps://thenoisyroom.com';
+  const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
+  const file = new File([blob], 'noisy-room-score.png', { type: 'image/png' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file], text: text, title: 'The Noisy Room' }); return; }
+    catch (e) { if (e && e.name === 'AbortError') return; }
+  }
+  downloadScoreCard();
+  try {
+    await navigator.clipboard.writeText(text);
+    const orig = btn.innerHTML;
+    btn.innerHTML = 'Card saved · caption copied ✓';
+    setTimeout(() => { btn.innerHTML = orig; }, 2600);
+  } catch (e) {}
+}
+
+function downloadScoreCard() {
+  const canvas = document.getElementById('score-canvas');
+  const a = document.createElement('a');
+  a.download = 'noisy-room-score.png';
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+}
+
+document.getElementById('score-share-btn').addEventListener('click', shareScoreCard);
+document.getElementById('score-download-btn').addEventListener('click', downloadScoreCard);
 
 // ═══════════════════════════════
 // MOCKUP + COMMUNITY CHECK
@@ -3989,19 +4228,20 @@ function submitGuess() {
 // ═══════════════════════════════
 // SHARE BUTTONS
 // ═══════════════════════════════
+function refreshShareLinks() {
+  const pageURL = 'https://thenoisyroom.com';
+  const xText = currentShareText();
+  document.getElementById('share-x').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(xText) + '&url=' + encodeURIComponent(pageURL);
+  document.getElementById('share-bluesky').href = 'https://bsky.app/intent/compose?text=' + encodeURIComponent(xText + '\n\n' + pageURL);
+  document.getElementById('share-threads').href = 'https://www.threads.net/intent/post?text=' + encodeURIComponent(xText + '\n\n' + pageURL);
+}
+
 (function() {
   const pageURL = 'https://thenoisyroom.com';
   const pageTitle = 'Community Check';
 
-  // X / Twitter
-  const xText = "Only 3% of social media users post toxic content. But the algorithm makes it look like everyone.\n\nThis interactive explainer shows how it works — and what a fix looks like.";
-  document.getElementById('share-x').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(xText) + '&url=' + encodeURIComponent(pageURL);
-
-  // Bluesky
-  document.getElementById('share-bluesky').href = 'https://bsky.app/intent/compose?text=' + encodeURIComponent(xText + '\n\n' + pageURL);
-
-  // Threads
-  document.getElementById('share-threads').href = 'https://www.threads.net/intent/post?text=' + encodeURIComponent(xText + '\n\n' + pageURL);
+  // X / Bluesky / Threads (score-aware, rebuilt when the quiz completes)
+  refreshShareLinks();
 
   // LinkedIn
   document.getElementById('share-linkedin').href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(pageURL);
