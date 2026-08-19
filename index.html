@@ -27,7 +27,7 @@
 {"@context":"https://schema.org","@type":"Article","headline":"The Noisy Room","description":"How a tiny minority distorts what everyone else sees. An interactive essay about social media, misperception, and a proposal to fix it.","author":{"@type":"Person","name":"Tobias Rose-Stockwell","url":"https://tobias.cc"},"url":"https://thenoisyroom.com","image":"https://thenoisyroom.com/og-image.png","datePublished":"2026-02-18","dateModified":"2026-04-15","publisher":{"@type":"Organization","name":"The Noisy Room"}}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;0,6..96,900;1,6..96,400;1,6..96,700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;0,6..96,900;1,6..96,400;1,6..96,700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&family=League+Spartan:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script>
 // Apply saved theme or auto-detect from system preference
 (function(){var t=localStorage.getItem('theme');if(t){if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}else{var h=new Date().getHours();if(h>=22||h<6){document.documentElement.setAttribute('data-theme','dark');}}})();
@@ -60,8 +60,8 @@
   --card-shadow: 0 2px 12px rgba(44,40,37,0.06);
   --serif: 'Lora', Georgia, serif;
   --display: Georgia, serif;
-  --sans: 'IBM Plex Mono', monospace;
-  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'League Spartan', 'Helvetica Neue', sans-serif;
+  --mono: 'League Spartan', 'Helvetica Neue', sans-serif;
   --muted: #f5f3ef;
   --muted-hover: #faf8f4;
   --toxic-bg: #fef2f2;
@@ -222,8 +222,8 @@ button { font-family: inherit; cursor: pointer; }
 .essay-header { padding: 48px 0 0; margin-bottom: 144px; position: relative; }
 .essay-logo { display: flex; align-items: center; gap: 14px; margin-bottom: 40px; }
 .essay-logo-mark { width: 48px; height: 48px; flex-shrink: 0; }
-.essay-logo-text { font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text); line-height: 1.3; }
-.essay-logo-text span { display: block; font-size: 10px; font-weight: 400; color: var(--text-tertiary); letter-spacing: 0.5px; text-transform: none; margin-top: 2px; }
+.essay-logo-text { font-family: var(--mono); font-size: 15px; font-weight: 300; letter-spacing: 2.5px; text-transform: uppercase; color: var(--text); line-height: 1.3; }
+.essay-logo-text span { display: block; font-size: 10px; font-weight: 300; color: var(--text-tertiary); letter-spacing: 0.5px; text-transform: none; margin-top: 2px; }
 @media (min-width: 480px) {
   .essay-logo-mark { width: 56px; height: 56px; }
   .essay-logo-text { font-size: 14px; }
@@ -783,9 +783,9 @@ p strong { color: var(--text); font-weight: 600; }
 /* Table of Contents */
 .toc { position: fixed; top: 50%; left: 24px; transform: translateY(-50%); z-index: 100; display: flex; flex-direction: column; gap: 0; max-width: 160px; opacity: 0; transition: opacity 0.4s; pointer-events: none; }
 .toc.visible { opacity: 1; pointer-events: auto; }
-.toc a { font-family: var(--mono); font-size: 10px; line-height: 1.3; color: var(--text-tertiary); text-decoration: none; padding: 5px 12px 5px 12px; border-left: 1.5px solid var(--border); transition: color 0.25s, border-color 0.25s; display: block; }
+.toc a { font-family: var(--mono); font-size: 11.5px; font-weight: 300; line-height: 1.3; color: var(--text-tertiary); text-decoration: none; padding: 5px 12px 5px 12px; border-left: 1.5px solid var(--border); transition: color 0.25s, border-color 0.25s; display: block; }
 .toc a:hover { color: var(--text-secondary); }
-.toc a.active { color: var(--accent-green); border-left-color: var(--accent-green); font-weight: 600; }
+.toc a.active { color: var(--accent-green); border-left-color: var(--accent-green); font-weight: 500; }
 @media (max-width: 1100px) { .toc { display: none; } }
 
 /* Live Community Check Widget */
