@@ -11,7 +11,7 @@
 <meta name="robots" content="index, follow">
 <meta property="og:title" content="The Noisy Room">
 <meta property="og:description" content="Only 3% of social media users post toxic content — but Americans estimate 43%. An interactive essay about what algorithms hide.">
-<meta property="og:image" content="https://thenoisyroom.com/og-image.png?v=4">
+<meta property="og:image" content="https://thenoisyroom.com/og-image.png?v=5">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://thenoisyroom.com">
@@ -21,7 +21,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="The Noisy Room">
 <meta name="twitter:description" content="Only 3% of social media users post toxic content — but Americans estimate 43%. An interactive essay.">
-<meta name="twitter:image" content="https://thenoisyroom.com/og-image.png?v=4">
+<meta name="twitter:image" content="https://thenoisyroom.com/og-image.png?v=5">
 <meta name="twitter:creator" content="@TobiasRose">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Article","headline":"The Noisy Room","description":"How a tiny minority distorts what everyone else sees. An interactive essay about social media, misperception, and a proposal to fix it.","author":{"@type":"Person","name":"Tobias Rose-Stockwell","url":"https://tobias.cc"},"url":"https://thenoisyroom.com","image":"https://thenoisyroom.com/og-image.png","datePublished":"2026-02-18","dateModified":"2026-04-15","publisher":{"@type":"Organization","name":"The Noisy Room"}}
@@ -3292,7 +3292,7 @@ function drawScoreCard(d) {
   ctx.letterSpacing = '7px';
   ctx.font = '600 34px "IBM Plex Mono", monospace';
   ctx.fillStyle = INK;
-  ctx.fillText('MY PERCEPTION:', W / 2 + 3, 262);
+  ctx.fillText('MY PERCEPTION:', W / 2 + 3, 286);
   try { ctx.letterSpacing = '0px'; } catch (e) {}
 
   // Hero percentage
@@ -3300,26 +3300,20 @@ function drawScoreCard(d) {
   const heroPx = fitText(heroText, '"IBM Plex Mono", monospace', '700', 380, 220, CW);
   ctx.font = '700 ' + heroPx + 'px "IBM Plex Mono", monospace';
   ctx.fillStyle = toneColor;
-  ctx.fillText(heroText, W / 2, 480);
+  ctx.fillText(heroText, W / 2, 520);
 
   // DISTORTED stamp
   try { ctx.letterSpacing = '10px'; } catch (e) {}
   ctx.font = '700 40px "IBM Plex Mono", monospace';
   const stamp = 'DISTORTED';
   const stW = ctx.measureText(stamp).width;
-  const pillW = stW + 88, pillH = 92, pillY = 712;
+  const pillW = stW + 88, pillH = 92, pillY = 764;
   ctx.strokeStyle = toneColor;
   ctx.lineWidth = 3.5;
   ctx.beginPath(); ctx.roundRect(W / 2 - pillW / 2, pillY - pillH / 2, pillW, pillH, 46); ctx.stroke();
   ctx.fillStyle = toneColor;
   ctx.fillText(stamp, W / 2 + 5, pillY + 3);
   try { ctx.letterSpacing = '0px'; } catch (e) {}
-
-  // Receipt: worst guess vs reality — the context for strangers
-  const recPx = fitText(d.receipt, '"IBM Plex Mono", monospace', '400', 26, 19, CW);
-  ctx.font = '400 ' + recPx + 'px "IBM Plex Mono", monospace';
-  ctx.fillStyle = TERT;
-  ctx.fillText(d.receipt, W / 2, 830);
 
   // Footer CTA
   ctx.strokeStyle = BORDER;
