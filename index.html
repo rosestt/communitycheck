@@ -3233,24 +3233,20 @@ function computeDistortion() {
     label: n === 1 ? 'Democrats who are LGBTQ' : 'Republicans earning $250K+',
     guess: mqGuesses[n],
     actual: MQ_DATA[n].actual,
-    ratio: Math.max(1, mqGuesses[n] / MQ_DATA[n].actual),
+    gap: Math.abs(mqGuesses[n] - MQ_DATA[n].actual),
   }));
-  const avg = (rows[0].ratio + rows[1].ratio) / 2;
-  const mult = avg >= 10 ? Math.round(avg) : Math.round(avg * 10) / 10;
-  let tier, sentence, tone;
-  if (avg < 1.5)      { tier = 'CLEAR-EYED';      tone = 'green'; sentence = 'My feed hasn’t warped my view of the “other side.”'; }
-  else if (avg < 3)   { tier = 'MILD STATIC';     tone = 'red';   sentence = 'That’s how much my feed inflated the “other side.”'; }
-  else if (avg < 8)   { tier = 'NOISY FEED';      tone = 'red';   sentence = 'That’s how much my feed inflated the “other side.”'; }
-  else                { tier = 'FULLY DISTORTED'; tone = 'red';   sentence = 'That’s how much my feed inflated the “other side.”'; }
-  const worst = rows[0].ratio >= rows[1].ratio ? rows[0] : rows[1];
+  // Distortion = average gap between guess and reality, in percentage points
+  const score = Math.min(100, Math.round((rows[0].gap + rows[1].gap) / 2));
+  const tone = score < 10 ? 'green' : 'red';
+  const worst = rows[0].gap >= rows[1].gap ? rows[0] : rows[1];
   const receipt = 'I guessed ' + worst.guess + '% of ' + (worst === rows[0] ? 'Democrats are LGBTQ' : 'Republicans earn $250K+') + '. Reality: ' + worst.actual + '%.';
-  return { rows, mult, tier, sentence, receipt, tone };
+  return { rows, score, receipt, tone };
 }
 
 function currentShareText() {
   const d = computeDistortion();
-  if (d) return 'My perception score: I overestimated the “other side” by ' + d.mult + '×. Only ~3% of users post the toxic stuff — the algorithm makes it look like everyone. Check your own distortion:';
-  return "Only 3% of social media users post toxic content. But the algorithm makes it look like everyone.\n\nThis interactive explainer shows how it works — and what a fix looks like.";
+  if (d) return 'My perception: ' + d.score + '% distorted. I guessed what the \u201Cother side\u201D actually looks like \u2014 my feed had other ideas. Test yours:';
+  return "Only 3% of social media users post toxic content. But the algorithm makes it look like everyone.\n\nThis interactive explainer shows how it works \u2014 and what a fix looks like.";
 }
 
 function drawScoreCard(d) {
@@ -3261,9 +3257,8 @@ function drawScoreCard(d) {
   const INK = '#1c1a17', TERT = '#736d65', GREEN = '#16a34a', RED = '#dc2626',
         BG = '#faf8f4', BORDER = '#e8e4de';
   const toneColor = d.tone === 'green' ? GREEN : RED;
-  const CW = 880; // max content width
+  const CW = 880;
 
-  // Shrink a font size until text fits maxWidth
   function fitText(text, family, weight, startPx, minPx, maxWidth) {
     let px = startPx;
     while (px > minPx) {
@@ -3289,49 +3284,50 @@ function drawScoreCard(d) {
   ctx.fillStyle = TERT;
   const wm = 'THE NOISY ROOM';
   const wmW = ctx.measureText(wm).width;
-  ctx.fillText(wm, W / 2 + 14, 128);
+  ctx.fillText(wm, W / 2 + 14, 120);
   ctx.fillStyle = GREEN;
-  ctx.beginPath(); ctx.arc(W / 2 - wmW / 2 - 14, 128, 9, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(W / 2 - wmW / 2 - 14, 120, 9, 0, Math.PI * 2); ctx.fill();
+
+  // Label
+  ctx.letterSpacing = '7px';
+  ctx.font = '600 34px "IBM Plex Mono", monospace';
+  ctx.fillStyle = INK;
+  ctx.fillText('MY PERCEPTION:', W / 2 + 3, 262);
   try { ctx.letterSpacing = '0px'; } catch (e) {}
 
-  // Hero multiple
-  const heroText = d.mult + '\u00D7';
-  const heroPx = fitText(heroText, '"IBM Plex Mono", monospace', '700', 400, 220, CW);
+  // Hero percentage
+  const heroText = d.score + '%';
+  const heroPx = fitText(heroText, '"IBM Plex Mono", monospace', '700', 380, 220, CW);
   ctx.font = '700 ' + heroPx + 'px "IBM Plex Mono", monospace';
   ctx.fillStyle = toneColor;
-  ctx.fillText(heroText, W / 2, 400);
+  ctx.fillText(heroText, W / 2, 480);
 
-  // Tier stamp (outlined pill)
-  try { ctx.letterSpacing = '6px'; } catch (e) {}
-  ctx.font = '700 30px "IBM Plex Mono", monospace';
-  const tierW = ctx.measureText(d.tier).width;
-  const pillW = tierW + 76, pillH = 68, pillY = 620;
+  // DISTORTED stamp
+  try { ctx.letterSpacing = '10px'; } catch (e) {}
+  ctx.font = '700 40px "IBM Plex Mono", monospace';
+  const stamp = 'DISTORTED';
+  const stW = ctx.measureText(stamp).width;
+  const pillW = stW + 88, pillH = 92, pillY = 712;
   ctx.strokeStyle = toneColor;
-  ctx.lineWidth = 3;
-  ctx.beginPath(); ctx.roundRect(W / 2 - pillW / 2, pillY - pillH / 2, pillW, pillH, 34); ctx.stroke();
+  ctx.lineWidth = 3.5;
+  ctx.beginPath(); ctx.roundRect(W / 2 - pillW / 2, pillY - pillH / 2, pillW, pillH, 46); ctx.stroke();
   ctx.fillStyle = toneColor;
-  ctx.fillText(d.tier, W / 2 + 3, pillY + 2);
+  ctx.fillText(stamp, W / 2 + 5, pillY + 3);
   try { ctx.letterSpacing = '0px'; } catch (e) {}
 
-  // One-sentence explainer
-  const sentPx = fitText(d.sentence, 'Georgia, serif', 'italic', 46, 32, CW);
-  ctx.font = 'italic ' + sentPx + 'px Georgia, serif';
-  ctx.fillStyle = INK;
-  ctx.fillText(d.sentence, W / 2, 748);
-
-  // Receipt: worst guess vs reality
-  const recPx = fitText(d.receipt, '"IBM Plex Mono", monospace', '400', 25, 19, CW);
+  // Receipt: worst guess vs reality — the context for strangers
+  const recPx = fitText(d.receipt, '"IBM Plex Mono", monospace', '400', 26, 19, CW);
   ctx.font = '400 ' + recPx + 'px "IBM Plex Mono", monospace';
   ctx.fillStyle = TERT;
-  ctx.fillText(d.receipt, W / 2, 812);
+  ctx.fillText(d.receipt, W / 2, 830);
 
-  // Footer
+  // Footer CTA
   ctx.strokeStyle = BORDER;
   ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(W / 2 - 200, 908); ctx.lineTo(W / 2 + 200, 908); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(W / 2 - 200, 912); ctx.lineTo(W / 2 + 200, 912); ctx.stroke();
   ctx.font = '600 30px "IBM Plex Mono", monospace';
   ctx.fillStyle = GREEN;
-  ctx.fillText('What\u2019s your number? \u2192 thenoisyroom.com', W / 2, 972);
+  ctx.fillText('Test your perception \u2192 thenoisyroom.com', W / 2, 976);
 
   // Hairline frame
   ctx.strokeStyle = BORDER;
