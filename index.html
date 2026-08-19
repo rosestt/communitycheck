@@ -3237,12 +3237,14 @@ function computeDistortion() {
   }));
   const avg = (rows[0].ratio + rows[1].ratio) / 2;
   const mult = avg >= 10 ? Math.round(avg) : Math.round(avg * 10) / 10;
-  let verdict, tone;
-  if (avg < 1.5)      { verdict = 'Clear-eyed. I see the actual room.'; tone = 'green'; }
-  else if (avg < 3)   { verdict = 'Mild static. Close to the real room.'; tone = 'green'; }
-  else if (avg < 8)   { verdict = 'My feed inflated the loud few.'; tone = 'red'; }
-  else                { verdict = 'The noisy 3% owned my priors.'; tone = 'red'; }
-  return { rows, mult, verdict, tone };
+  let tier, sentence, tone;
+  if (avg < 1.5)      { tier = 'CLEAR-EYED';      tone = 'green'; sentence = 'My feed hasn’t warped my view of the “other side.”'; }
+  else if (avg < 3)   { tier = 'MILD STATIC';     tone = 'red';   sentence = 'That’s how much my feed inflated the “other side.”'; }
+  else if (avg < 8)   { tier = 'NOISY FEED';      tone = 'red';   sentence = 'That’s how much my feed inflated the “other side.”'; }
+  else                { tier = 'FULLY DISTORTED'; tone = 'red';   sentence = 'That’s how much my feed inflated the “other side.”'; }
+  const worst = rows[0].ratio >= rows[1].ratio ? rows[0] : rows[1];
+  const receipt = 'I guessed ' + worst.guess + '% of ' + (worst === rows[0] ? 'Democrats are LGBTQ' : 'Republicans earn $250K+') + '. Reality: ' + worst.actual + '%.';
+  return { rows, mult, tier, sentence, receipt, tone };
 }
 
 function currentShareText() {
@@ -3251,101 +3253,87 @@ function currentShareText() {
   return "Only 3% of social media users post toxic content. But the algorithm makes it look like everyone.\n\nThis interactive explainer shows how it works — and what a fix looks like.";
 }
 
-function drawPerson(ctx, x, y, s, color) {
-  // s = cell size; head + shoulders glyph, matches the site's crowd figures
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  ctx.arc(x + s * 0.5, y + s * 0.30, s * 0.17, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.moveTo(x + s * 0.20, y + s * 0.92);
-  ctx.arc(x + s * 0.5, y + s * 0.92, s * 0.30, Math.PI, 0);
-  ctx.closePath();
-  ctx.fill();
-}
-
 function drawScoreCard(d) {
   const canvas = document.getElementById('score-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const W = 1080, H = 1080;
   const INK = '#1c1a17', TERT = '#736d65', GREEN = '#16a34a', RED = '#dc2626',
-        BG = '#faf8f4', MUTED = '#eceae4', BORDER = '#e8e4de';
+        BG = '#faf8f4', BORDER = '#e8e4de';
   const toneColor = d.tone === 'green' ? GREEN : RED;
-  const M = 88; // side margin
+  const CW = 880; // max content width
+
+  // Shrink a font size until text fits maxWidth
+  function fitText(text, family, weight, startPx, minPx, maxWidth) {
+    let px = startPx;
+    while (px > minPx) {
+      ctx.font = weight + ' ' + px + 'px ' + family;
+      if (ctx.measureText(text).width <= maxWidth) break;
+      px -= 2;
+    }
+    return px;
+  }
 
   ctx.clearRect(0, 0, W, H);
   ctx.fillStyle = BG;
   ctx.fillRect(0, 0, W, H);
   ctx.fillStyle = toneColor;
-  ctx.fillRect(0, 0, W, 10);
+  ctx.fillRect(0, 0, W, 12);
 
-  // Kicker
-  try { ctx.letterSpacing = '4px'; } catch (e) {}
-  ctx.fillStyle = GREEN;
-  ctx.beginPath(); ctx.arc(M + 10, 108, 10, 0, Math.PI * 2); ctx.fill();
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  // Wordmark
+  try { ctx.letterSpacing = '5px'; } catch (e) {}
+  ctx.font = '600 28px "IBM Plex Mono", monospace';
   ctx.fillStyle = TERT;
-  ctx.font = '600 26px "IBM Plex Mono", monospace';
-  ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-  ctx.fillText('COMMUNITY CHECK · PERCEPTION SCORE', M + 38, 110);
+  const wm = 'THE NOISY ROOM';
+  const wmW = ctx.measureText(wm).width;
+  ctx.fillText(wm, W / 2 + 14, 128);
+  ctx.fillStyle = GREEN;
+  ctx.beginPath(); ctx.arc(W / 2 - wmW / 2 - 14, 128, 9, 0, Math.PI * 2); ctx.fill();
   try { ctx.letterSpacing = '0px'; } catch (e) {}
 
-  // Giant multiple
-  ctx.textAlign = 'center';
+  // Hero multiple
+  const heroText = d.mult + '\u00D7';
+  const heroPx = fitText(heroText, '"IBM Plex Mono", monospace', '700', 400, 220, CW);
+  ctx.font = '700 ' + heroPx + 'px "IBM Plex Mono", monospace';
   ctx.fillStyle = toneColor;
-  ctx.font = '700 250px "IBM Plex Mono", monospace';
-  ctx.fillText(d.mult + '×', W / 2, 320);
-  ctx.fillStyle = TERT;
-  ctx.font = '400 30px "IBM Plex Mono", monospace';
-  ctx.fillText('how much my feed inflated the “other side”', W / 2, 452);
+  ctx.fillText(heroText, W / 2, 400);
 
-  // Verdict
+  // Tier stamp (outlined pill)
+  try { ctx.letterSpacing = '6px'; } catch (e) {}
+  ctx.font = '700 30px "IBM Plex Mono", monospace';
+  const tierW = ctx.measureText(d.tier).width;
+  const pillW = tierW + 76, pillH = 68, pillY = 620;
+  ctx.strokeStyle = toneColor;
+  ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.roundRect(W / 2 - pillW / 2, pillY - pillH / 2, pillW, pillH, 34); ctx.stroke();
+  ctx.fillStyle = toneColor;
+  ctx.fillText(d.tier, W / 2 + 3, pillY + 2);
+  try { ctx.letterSpacing = '0px'; } catch (e) {}
+
+  // One-sentence explainer
+  const sentPx = fitText(d.sentence, 'Georgia, serif', 'italic', 46, 32, CW);
+  ctx.font = 'italic ' + sentPx + 'px Georgia, serif';
   ctx.fillStyle = INK;
-  ctx.font = 'italic 54px Georgia, serif';
-  ctx.fillText(d.verdict, W / 2, 540);
+  ctx.fillText(d.sentence, W / 2, 748);
 
-  // Stat rows
-  let y = 634;
-  const trackW = W - M * 2;
-  d.rows.forEach(row => {
-    ctx.textAlign = 'left';
-    ctx.fillStyle = INK;
-    ctx.font = '600 25px "IBM Plex Mono", monospace';
-    ctx.fillText(row.label, M, y);
-    ctx.textAlign = 'right';
-    ctx.fillStyle = TERT;
-    ctx.font = '400 23px "IBM Plex Mono", monospace';
-    ctx.fillText('my guess ' + row.guess + '%  ·  reality ' + row.actual + '%', W - M, y);
-
-    const barY = y + 22;
-    ctx.fillStyle = MUTED;
-    ctx.beginPath(); ctx.roundRect(M, barY, trackW, 20, 10); ctx.fill();
-    ctx.fillStyle = RED;
-    ctx.beginPath(); ctx.roundRect(M, barY, Math.max(20, trackW * row.guess / 100), 20, 10); ctx.fill();
-    ctx.fillStyle = GREEN;
-    ctx.beginPath(); ctx.roundRect(M, barY + 26, Math.max(14, trackW * row.actual / 100), 8, 4); ctx.fill();
-    y += 110;
-  });
-
-  // Room strip: 100 figures, 3 red
-  const cols = 25, gRows = 4, cell = 30, gridW = cols * cell, gx = (W - gridW) / 2, gridY = 828;
-  const redIdx = new Set([7, 41, 88]);
-  for (let i = 0; i < 100; i++) {
-    const cx = gx + (i % cols) * cell;
-    const cy = gridY + Math.floor(i / cols) * cell;
-    drawPerson(ctx, cx, cy, cell, redIdx.has(i) ? RED : '#d0ccc4');
-  }
-
-  ctx.textAlign = 'center';
+  // Receipt: worst guess vs reality
+  const recPx = fitText(d.receipt, '"IBM Plex Mono", monospace', '400', 25, 19, CW);
+  ctx.font = '400 ' + recPx + 'px "IBM Plex Mono", monospace';
   ctx.fillStyle = TERT;
-  ctx.font = '400 23px "IBM Plex Mono", monospace';
-  ctx.fillText('3 in 100 users post the toxic stuff. The feed hides the other 97.', W / 2, 990);
+  ctx.fillText(d.receipt, W / 2, 812);
 
+  // Footer
+  ctx.strokeStyle = BORDER;
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(W / 2 - 200, 908); ctx.lineTo(W / 2 + 200, 908); ctx.stroke();
+  ctx.font = '600 30px "IBM Plex Mono", monospace';
   ctx.fillStyle = GREEN;
-  ctx.font = '700 28px "IBM Plex Mono", monospace';
-  ctx.fillText('thenoisyroom.com', W / 2, 1038);
+  ctx.fillText('What\u2019s your number? \u2192 thenoisyroom.com', W / 2, 972);
 
-  // hairline frame
+  // Hairline frame
   ctx.strokeStyle = BORDER;
   ctx.lineWidth = 2;
   ctx.strokeRect(1, 1, W - 2, H - 2);
