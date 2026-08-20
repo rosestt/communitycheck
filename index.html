@@ -840,14 +840,6 @@ p strong { color: var(--text); font-weight: 600; }
 .share-btn:hover { border-color: var(--accent-green); color: var(--accent-green); background: var(--accent-green-dim); }
 .share-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
 .share-btn.copied { background: var(--accent-green-dim); border-color: var(--accent-green); color: var(--accent-green); }
-/* Perception score card (shareable ending) */
-.score-card-wrap { margin: 0 auto 36px; max-width: 460px; }
-.score-card-nudge { font-family: var(--mono); font-size: 12px; line-height: 1.7; color: var(--text-tertiary); background: var(--muted); border: 1px dashed var(--border-bright); border-radius: 10px; padding: 14px 18px; }
-.score-card-nudge a { color: var(--accent-green); text-decoration: underline; }
-.score-card canvas { width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--border-bright); box-shadow: 0 12px 40px rgba(0,0,0,0.10); display: block; }
-.score-card-actions { display: flex; justify-content: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
-.score-card-kicker { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 12px; }
-
 .share-divider { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
 .share-divider::before, .share-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 .share-divider span { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-tertiary); }
@@ -1906,26 +1898,6 @@ function feedDotBg() { return isDarkTheme() ? 'rgba(255,255,255,0.1)' : 'rgba(0,
     <div class="share-section">
       <h3>Help Surface the Quiet Majority</h3>
       <p>If this changed how you see the feed, share it with someone who might need to see it too.</p>
-
-      <div class="score-card-wrap" id="score-card-wrap">
-        <div class="score-card-kicker">Your result</div>
-        <div class="score-card-nudge" id="score-card-nudge">
-          Want a shareable score? <a href="#misperception-quiz">Take the two-question perception check above</a> and your card appears here.
-        </div>
-        <div class="score-card hidden" id="score-card">
-          <canvas id="score-canvas" width="1080" height="1080" aria-label="Your perception score card"></canvas>
-          <div class="score-card-actions">
-            <button class="share-btn" id="score-share-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-              Share my result
-            </button>
-            <button class="share-btn" id="score-download-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Download card
-            </button>
-          </div>
-        </div>
-      </div>
 
       <div class="share-buttons">
         <a class="share-btn" id="share-x" href="#" target="_blank" rel="noopener">
@@ -3182,7 +3154,6 @@ const MQ_DATA = {
   2: { actual: 2, label: 'Republicans earning $250K+', shortLabel: '2%' },
 };
 let mqLocked = 0;
-const mqGuesses = {};
 
 function lockMQ(n) {
   const sl = document.getElementById('mq-slider-' + n);
@@ -3209,163 +3180,15 @@ function lockMQ(n) {
     reveal.innerHTML = `<div class="reveal-box" style="margin-top:12px"><div class="reveal-comparison" style="margin:0;border:none;padding:0">${msg}</div></div>`;
   }, 600);
 
-  mqGuesses[n] = guess;
   mqLocked++;
   if (mqLocked === 2) {
     setTimeout(() => {
       document.getElementById('mq-reveal').innerHTML = `
         <p style="font-family:var(--serif);font-size:17px;line-height:2.6;color:var(--text-secondary);margin-top:16px">The average American overestimates these kinds of figures by <strong style="font-family:var(--mono);font-size:24px;color:var(--text);line-height:1">342%</strong>. Social media turns the visible few into your mental model of the whole group.</p>
-        <p style="font-family:var(--mono);font-size:13px;margin-top:12px"><a href="#share" style="color:var(--accent-green);text-decoration:underline">Your shareable perception score is waiting at the end &#8595;</a></p>
       `;
     }, 1200);
-    updateScoreCard();
   }
 }
-
-// ═══════════════════════════════
-// PERCEPTION SCORE CARD (shareable ending)
-// ═══════════════════════════════
-function computeDistortion() {
-  if (mqGuesses[1] === undefined || mqGuesses[2] === undefined) return null;
-  const rows = [1, 2].map(n => ({
-    label: n === 1 ? 'Democrats who are LGBTQ' : 'Republicans earning $250K+',
-    guess: mqGuesses[n],
-    actual: MQ_DATA[n].actual,
-    gap: Math.abs(mqGuesses[n] - MQ_DATA[n].actual),
-  }));
-  // Distortion = average gap between guess and reality, in percentage points
-  const score = Math.min(100, Math.round((rows[0].gap + rows[1].gap) / 2));
-  const tone = score < 10 ? 'green' : 'red';
-  const worst = rows[0].gap >= rows[1].gap ? rows[0] : rows[1];
-  const receipt = 'I guessed ' + worst.guess + '% of ' + (worst === rows[0] ? 'Democrats are LGBTQ' : 'Republicans earn $250K+') + '. Reality: ' + worst.actual + '%.';
-  return { rows, score, receipt, tone };
-}
-
-function currentShareText() {
-  const d = computeDistortion();
-  if (d) return 'My perception: ' + d.score + '% distorted. I guessed what the \u201Cother side\u201D actually looks like \u2014 my feed had other ideas. Test yours:';
-  return "Only 3% of social media users post toxic content. But the algorithm makes it look like everyone.\n\nThis interactive explainer shows how it works \u2014 and what a fix looks like.";
-}
-
-function drawScoreCard(d) {
-  const canvas = document.getElementById('score-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const W = 1080, H = 1080;
-  const INK = '#1c1a17', TERT = '#736d65', GREEN = '#16a34a', RED = '#dc2626',
-        BG = '#faf8f4', BORDER = '#e8e4de';
-  const toneColor = d.tone === 'green' ? GREEN : RED;
-  const CW = 880;
-
-  function fitText(text, family, weight, startPx, minPx, maxWidth) {
-    let px = startPx;
-    while (px > minPx) {
-      ctx.font = weight + ' ' + px + 'px ' + family;
-      if (ctx.measureText(text).width <= maxWidth) break;
-      px -= 2;
-    }
-    return px;
-  }
-
-  ctx.clearRect(0, 0, W, H);
-  ctx.fillStyle = BG;
-  ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = toneColor;
-  ctx.fillRect(0, 0, W, 12);
-
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-
-  // Wordmark
-  try { ctx.letterSpacing = '5px'; } catch (e) {}
-  ctx.font = '600 28px "IBM Plex Mono", monospace';
-  ctx.fillStyle = TERT;
-  const wm = 'THE NOISY ROOM';
-  const wmW = ctx.measureText(wm).width;
-  ctx.fillText(wm, W / 2 + 14, 120);
-  ctx.fillStyle = GREEN;
-  ctx.beginPath(); ctx.arc(W / 2 - wmW / 2 - 14, 120, 9, 0, Math.PI * 2); ctx.fill();
-
-  // Label
-  ctx.letterSpacing = '7px';
-  ctx.font = '600 34px "IBM Plex Mono", monospace';
-  ctx.fillStyle = INK;
-  ctx.fillText('MY PERCEPTION:', W / 2 + 3, 286);
-  try { ctx.letterSpacing = '0px'; } catch (e) {}
-
-  // Hero percentage
-  const heroText = d.score + '%';
-  const heroPx = fitText(heroText, '"IBM Plex Mono", monospace', '700', 380, 220, CW);
-  ctx.font = '700 ' + heroPx + 'px "IBM Plex Mono", monospace';
-  ctx.fillStyle = toneColor;
-  ctx.fillText(heroText, W / 2, 520);
-
-  // DISTORTED stamp
-  try { ctx.letterSpacing = '10px'; } catch (e) {}
-  ctx.font = '700 40px "IBM Plex Mono", monospace';
-  const stamp = 'DISTORTED';
-  const stW = ctx.measureText(stamp).width;
-  const pillW = stW + 88, pillH = 92, pillY = 764;
-  ctx.strokeStyle = toneColor;
-  ctx.lineWidth = 3.5;
-  ctx.beginPath(); ctx.roundRect(W / 2 - pillW / 2, pillY - pillH / 2, pillW, pillH, 46); ctx.stroke();
-  ctx.fillStyle = toneColor;
-  ctx.fillText(stamp, W / 2 + 5, pillY + 3);
-  try { ctx.letterSpacing = '0px'; } catch (e) {}
-
-  // Footer CTA
-  ctx.strokeStyle = BORDER;
-  ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(W / 2 - 200, 912); ctx.lineTo(W / 2 + 200, 912); ctx.stroke();
-  ctx.font = '600 30px "IBM Plex Mono", monospace';
-  ctx.fillStyle = GREEN;
-  ctx.fillText('Test your perception \u2192 thenoisyroom.com', W / 2, 976);
-
-  // Hairline frame
-  ctx.strokeStyle = BORDER;
-  ctx.lineWidth = 2;
-  ctx.strokeRect(1, 1, W - 2, H - 2);
-}
-
-function updateScoreCard() {
-  const d = computeDistortion();
-  if (!d) return;
-  document.getElementById('score-card-nudge').classList.add('hidden');
-  document.getElementById('score-card').classList.remove('hidden');
-  const fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
-  fontsReady.then(() => drawScoreCard(d));
-  if (typeof refreshShareLinks === 'function') refreshShareLinks();
-}
-
-async function shareScoreCard() {
-  const canvas = document.getElementById('score-canvas');
-  const btn = document.getElementById('score-share-btn');
-  const text = currentShareText() + '\nhttps://thenoisyroom.com';
-  const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
-  const file = new File([blob], 'noisy-room-score.png', { type: 'image/png' });
-  if (navigator.canShare && navigator.canShare({ files: [file] })) {
-    try { await navigator.share({ files: [file], text: text, title: 'The Noisy Room' }); return; }
-    catch (e) { if (e && e.name === 'AbortError') return; }
-  }
-  downloadScoreCard();
-  try {
-    await navigator.clipboard.writeText(text);
-    const orig = btn.innerHTML;
-    btn.innerHTML = 'Card saved · caption copied ✓';
-    setTimeout(() => { btn.innerHTML = orig; }, 2600);
-  } catch (e) {}
-}
-
-function downloadScoreCard() {
-  const canvas = document.getElementById('score-canvas');
-  const a = document.createElement('a');
-  a.download = 'noisy-room-score.png';
-  a.href = canvas.toDataURL('image/png');
-  a.click();
-}
-
-document.getElementById('score-share-btn').addEventListener('click', shareScoreCard);
-document.getElementById('score-download-btn').addEventListener('click', downloadScoreCard);
 
 // ═══════════════════════════════
 // MOCKUP + COMMUNITY CHECK
@@ -4206,7 +4029,7 @@ function submitGuess() {
 // ═══════════════════════════════
 function refreshShareLinks() {
   const pageURL = 'https://thenoisyroom.com';
-  const xText = currentShareText();
+  const xText = "Only 3% of social media users post toxic content. But the algorithm makes it look like everyone.\n\nThis interactive explainer shows how it works — and what a fix looks like.";
   document.getElementById('share-x').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(xText) + '&url=' + encodeURIComponent(pageURL);
   document.getElementById('share-bluesky').href = 'https://bsky.app/intent/compose?text=' + encodeURIComponent(xText + '\n\n' + pageURL);
   document.getElementById('share-threads').href = 'https://www.threads.net/intent/post?text=' + encodeURIComponent(xText + '\n\n' + pageURL);
