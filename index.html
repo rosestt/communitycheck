@@ -266,7 +266,7 @@ p strong { color: var(--text); font-weight: 600; }
 .pull { font-size: 24px; font-style: italic; color: var(--text); line-height: 1.5; border-left: 3px solid var(--accent-green); padding-left: 28px; margin: 44px 0; }
 .step-label { display: inline-block; font-family: var(--mono); font-size: 14px; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase; color: var(--accent-green); background: var(--accent-green-dim); padding: 4px 12px; border-radius: 4px; margin-bottom: 10px; }
 .step-title { display: block; font-family: var(--display); font-size: 26px; font-weight: 400; color: var(--text); line-height: 1.25; margin-bottom: 16px; letter-spacing: -0.3px; }
-.cite { font-family: var(--mono); font-size: 14px; color: var(--text-tertiary); vertical-align: super; cursor: pointer; font-weight: 500; text-decoration: none; transition: color 0.15s; }
+.cite { font-family: var(--mono); font-size: 10px; color: var(--text-tertiary); vertical-align: super; cursor: pointer; font-weight: 500; text-decoration: none; transition: color 0.15s; }
 .cite:hover { color: var(--text-secondary); }
 
 /* Guess slider */
@@ -724,7 +724,7 @@ p strong { color: var(--text); font-weight: 600; }
 .fn { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 12px; }
 .fn a { color: var(--blue); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
 .fn a:hover { border-bottom-color: var(--blue); }
-.fn-num { font-family: var(--mono); font-size: 14px; color: var(--blue); font-weight: 600; margin-right: 6px; }
+.fn-num { font-family: var(--mono); font-size: 11px; color: var(--blue); font-weight: 600; margin-right: 6px; }
 
 /* CC sample tabs */
 .cc-sample-tabs { display: flex; gap: 0; margin-top: 20px; margin-bottom: 0; padding-top: 16px; border-top: 1px solid var(--border); }
@@ -3203,7 +3203,7 @@ function lockMQ(n) {
   const actualDesc = n === 1 ? 'of Democratic supporters identify as LGBTQ' : 'of Republican supporters earn $250K+';
   const _B = 'font-family:var(--mono);font-size:24px;color:var(--text);line-height:1';
   const _G = 'font-family:var(--mono);font-size:24px;color:var(--accent);line-height:1';
-  const _P = 'font-family:var(--serif);font-size: 13px;line-height:2.6;color:var(--text-secondary)';
+  const _P = 'font-family:var(--mono);font-size:18px;line-height:2.1;color:var(--text-secondary)';
   const msg = overRatio > 1
     ? `<div style="${_P}">Your guess: <strong style="${_B}">${guess}%</strong>. In reality, <strong style="${_G}">${data.actual}%</strong> ${actualDesc}. That\u2019s a <strong style="${_B}">${overRatio}\u00D7</strong> overestimate.</div>`
     : `<div style="${_P}">Your guess: <strong style="${_B}">${guess}%</strong>. In reality, <strong style="${_G}">${data.actual}%</strong> ${actualDesc}. You\u2019re unusually well-calibrated.</div>`;
@@ -3217,7 +3217,7 @@ function lockMQ(n) {
   if (mqLocked === 2) {
     setTimeout(() => {
       document.getElementById('mq-reveal').innerHTML = `
-        <p style="font-family:var(--serif);font-size: 13px;line-height:2.6;color:var(--text-secondary);margin-top:16px">The average American overestimates these kinds of figures by <strong style="font-family:var(--mono);font-size:24px;color:var(--text);line-height:1">342%</strong>. Social media turns the visible few into your mental model of the whole group.</p>
+        <p style="font-family:var(--mono);font-size:18px;line-height:2.1;color:var(--text-secondary);margin-top:16px">The average American overestimates these kinds of figures by <strong style="font-family:var(--mono);font-size:24px;color:var(--text);line-height:1">342%</strong>. Social media turns the visible few into your mental model of the whole group.</p>
         <p style="font-family:var(--mono);font-size:13px;margin-top:12px"><a href="#share" style="color:var(--accent-green);text-decoration:underline">Your shareable perception score is waiting at the end &#8595;</a></p>
       `;
     }, 1200);
